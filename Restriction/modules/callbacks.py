@@ -351,7 +351,7 @@ Click the provided button to purchase a premium plan according to your selected 
             msg = await customer_users(user_id, name)
             reply_markup = InlineKeyboardMarkup(
                 [
-                    [InlineKeyboardButton("💲 Business", url="")],
+                    [InlineKeyboardButton("💲 Business", url="https://t.me/team_zozo_pro")],
                     [InlineKeyboardButton("Back", callback_data="info_")]
                 ]
             )
