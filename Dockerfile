@@ -1,12 +1,24 @@
 FROM python:3.10.4-slim-buster
-RUN apt update && apt upgrade -y
-RUN apt-get install git curl python3-pip ffmpeg -y
-RUN apt-get -y install git
-RUN apt-get install -y wget python3-pip curl bash neofetch ffmpeg software-properties-common
+
+# Install required system packages in one step to reduce layers
+RUN apt update && \
+    apt upgrade -y && \
+    apt install -y git curl wget bash neofetch ffmpeg software-properties-common python3-pip && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirement file first (layer caching)
 COPY requirements.txt .
 
-RUN pip3 install wheel
-RUN pip3 install --no-cache-dir -U -r requirements.txt
-WORKDIR /app
+# Install Python dependencies
+RUN pip3 install --no-cache-dir wheel && \
+    pip3 install --no-cache-dir -r requirements.txt
+
+# Copy rest of the app files
 COPY . .
-CMD python3 -m Restriction
+
+# Set the default command
+CMD ["python3", "-m", "Restriction"]
